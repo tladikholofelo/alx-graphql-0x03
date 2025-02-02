@@ -1,12 +1,22 @@
 import "@/styles/globals.css";
+import { ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import type { AppProps } from "next/app";
-import { ApolloProvider } from "@apollo/client";
-import client from "@/graphql/apolloClient"; // Apollo Client import
 
-export default function App({ Component, pageProps }: AppProps) {
+const client = new ApolloClient({
+  uri: 'https://rickandmortyapi.com/graphql', // or your own API endpoint
+  cache: new InMemoryCache(),
+});
+
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
     </ApolloProvider>
   );
 }
+
+export default MyApp;
